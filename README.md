@@ -1,8 +1,27 @@
-# KTSP
-Algorithm to implement 10-fold cross validation KTSP in R
+# Analyzing the relation between histone markers and metabolite data
+Algorithm to implement 10-fold cross validation KTSP in R<br/>
 
-The metabolite data comprises of 225 metabolites in 928 cell lines from more than 20 cancer types in the Cancer Cell Line Encyclopedia profiled using liquid chromatography-mass spectrometry (LC-MS). The histone dataset from global chromatin profiling consists of 7 distinct histone markers along with varying the methylation and acetylation in the histones bringing the total number of histones to 42 for 897 cell lines. Histone methylation modifies certain amino acids in a histone protein by addition of one, two or three methyl groups.
+The metabolite data comprises of 136 metabolites in 928 cell lines from more than 20 cancer types in the Cancer Cell Line Encyclopedia profiled using liquid chromatography-mass spectrometry (LC-MS). The histone dataset from global chromatin profiling consists of 7 distinct histone markers along with varying the methylation and acetylation in the histones bringing the total number of histones to 42 for 897 cell lines. Histone methylation modifies certain amino acids in a histone protein by addition of one, two or three methyl groups.
 
-The goal of the analysis was to use the histone markers to classify CCLE metabolite data. Common cell lines were considered from the 928 cell lines in the metabolite data and 897 cell lines from the histone data to form the final dataset which comprised of 879 cell lines. The 42 histones were divided into 4 categories and sum and variation of histones in each category was calculated increasing the feature space by 8 features. Doubling time was an additional feature which brought the total feature space to 51 features. 
+The goal of the analysis was to use the histone markers to classify CCLE metabolite data. Common cell lines were considered from the 928 cell lines in the metabolite data and 897 cell lines from the histone data to form the final dataset which comprised of 879 cell lines. The 42 histones were divided into 4 categories and sum and variation of histones in each category was calculated increasing the feature space by 8 features. Doubling time was an additional feature which brought the total feature space to 51 features.<br/> 
+Thus, the final size of training and testing datasets are:<br/>
+Training Dataset – Histone Markers: 51 features for 879 cell lines.<br/> 
+Classification Dataset –  CCLE metabolite dataset: 136 metabolites for 879 cell lines.
 
+The training and testing data are available as excel sheets (.xlsx). The missing entries in metabolites dataset were replaced by 0. Z-score was calculated for all the metabolites for normalization of all the values. For k-TSP, the regression problem was converted into a binary classification problem with the two classes as ‘0’ and ‘1’. The threshold for binarization was set with 5 different values, thus giving 5 training datasets. The z-scores of metabolites were classified into these two classes by considering 5 different thresholds:<br/>
+Y <= 0 as 0 and Y > 0 as 1<br/>
+Y <= 0.5 as 0 and Y > 0.5 as 1<br/>
+Y <= 1 as 0 and Y > 1 as 1<br/>
+Y <= -0.5 as 0 and Y > -0.5 as 1<br/>
+Y <= -1 as 0 and Y > -1 as 1<br/>
+Thus the k-TSP model was ran 5 times (for 136 metabolites) to see the performance of the histones for each threshold and a comparative analysis was performed.
+The most uniform distribution of data points for all the histones was obtained by maintaining the threshold as 0.
+
+The classifier was built using the ‘switchbox’ package in R, which allows to train and validate a k-TSP classifier. It enables to filter the features to design the classifier, compute scores for all possible feature pairs and identify the ‘K’ number of top pairs to be used in the final classifier. A 10-fold cross validation was performed and average value for each performance parameter was calculated. This gave a better estimate about the comparative performance of all the metabolites. The classifier was trained using the default filtering function based on the Wilcoxon test. The feature selection range was set between 3 to 15. A random guess accuracy was also calculated per metabolite for comparative study. The top scoring histone pairs and their scores for the top 10 metabolites for every threshold was calculated. A 10-fold CV generates 10 classifiers per metabolite. The top scoring pairs of the best performing classifier along with their scores among the 10 are chosen. This process was repeated for 5 thresholds: -1, -0.5, 0, 0.5 and 1 – the metabolite dataset was binarized by keeping each of these as a threshold and thus 5 different training datasets were generated. Accuracy, Matthews Correlation Coefficient (MCC), Precision, Recall, F-1 score, random guess and p-value are the performance parameters used to check the relation between histone markers and metabolites. 
+
+The following R and MATLAB scripts are used to perform the classification:<br/>
+1) Y_to_Z.mlx - MATLAB script to convert the data to z-score values and binarize it according to each of the 5 thresholds.<br/>
+2) metab_pred_from_hist.R - R script to implement k-TSP algorithm by reading the excel file, performing a 10-fold cross validation and calculating the mean accuracy, MCC, precision, recall, F-1 score, random guess accuracy and p-value for every metabolite.<br/>
+3) calculateTopPairs.r - R script to calculate the top scoring pairs corresponding to the optimal classifier from the 10 classifiers generated by 10-fold cross validation.<br/> 
+4) KTSP.Scatterplots.r - R script to visualize the scatterplots of the top scoring pairs 
 
