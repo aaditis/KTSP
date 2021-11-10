@@ -1,4 +1,4 @@
-# Analyzing the relation between histone markers and metabolite data
+# Modeling interactions between histone ptms and metabolites using machine learning
 Algorithm to implement K-Top Scoring Pairs Algorithm with 10-fold cross validation in R<br/>
 
 The metabolite data comprises of 136 metabolites in 928 cell lines from more than 20 cancer types in the Cancer Cell Line Encyclopedia profiled using liquid chromatography-mass spectrometry (LC-MS). The histone dataset from global chromatin profiling consists of 7 distinct histone markers along with varying the methylation and acetylation in the histones bringing the total number of histones to 42 for 897 cell lines. Histone methylation modifies certain amino acids in a histone protein by addition of one, two or three methyl groups.
